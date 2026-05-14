@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="el">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page.title | default: "Location check" }}</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #101820;
+        --panel: #f7f5ef;
+        --ink: #1d252d;
+        --muted: #64707a;
+        --accent: #0f8f78;
+        --danger: #a73935;
+        --line: rgba(29, 37, 45, 0.16);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      main {
+        width: min(100%, 460px);
+        background: var(--panel);
+        border-radius: 8px;
+        padding: 28px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      }
+
+      .badge {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--accent);
+        color: white;
+        font-weight: 800;
+        letter-spacing: 0;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: 24px;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .details {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.5;
+        min-height: 20px;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 22px;
+        border: 0;
+        border-radius: 6px;
+        padding: 13px 16px;
+        background: var(--accent);
+        color: white;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button[hidden] {
+        display: none;
+      }
+
+      .denied .badge,
+      .error .badge {
+        background: var(--danger);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --panel: #182430;
+          --ink: #edf3f7;
+          --muted: #aeb9c2;
+          --line: rgba(237, 243, 247, 0.16);
+        }
+      }
+    </style>
+  </head>
+  <body
+    data-target="{{ page.target | escape }}"
+    data-center-lat="{{ page.center_lat }}"
+    data-center-lng="{{ page.center_lng }}"
+    data-radius-m="{{ page.radius_m | default: 100 }}"
+    data-redirect-delay-ms="{{ page.redirect_delay_ms | default: 900 }}"
+  >
+    <main id="card">
+      <div class="badge" aria-hidden="true">QR</div>
+      <h1 id="title">{{ page.heading | default: "Ελεγχος τοποθεσιας" }}</h1>
+      <p id="message">Ζηταμε αδεια για την τοποθεσια ωστε να συνεχισει το QR.</p>
+      <div class="details" id="details"></div>
+      <button id="retry" type="button" hidden>Δοκιμη ξανα</button>
+    </main>
+
+    <script>
+      (function () {
+        var data = document.body.dataset;
+        var targetUrl = data.target;
+        var centerLat = parseFloat(data.centerLat);
+        var centerLng = parseFloat(data.centerLng);
+        var radiusMeters = parseFloat(data.radiusM || "100");
+        var redirectDelayMs = parseInt(data.redirectDelayMs || "900", 10);
+        var card = document.getElementById("card");
+        var title = document.getElementById("title");
+        var message = document.getElementById("message");
+        var details = document.getElementById("details");
+        var retry = document.getElementById("retry");
+
+        function setState(state, nextTitle, nextMessage, nextDetails, canRetry) {
+          card.className = state;
+          title.textContent = nextTitle;
+          message.textContent = nextMessage;
+          details.textContent = nextDetails || "";
+          retry.hidden = !canRetry;
+        }
+
+        function toRad(value) {
+          return value * Math.PI / 180;
+        }
+
+        function distanceMeters(lat1, lng1, lat2, lng2) {
+          var earthRadius = 6371000;
+          var dLat = toRad(lat2 - lat1);
+          var dLng = toRad(lng2 - lng1);
+          var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+          return earthRadius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function formatMeters(value) {
+          if (value >= 1000) {
+            return (value / 1000).toFixed(2) + " km";
+          }
+
+          return Math.round(value) + " m";
+        }
+
+        function checkLocation() {
+          if (!targetUrl || !Number.isFinite(centerLat) || !Number.isFinite(centerLng)) {
+            setState(
+              "error",
+              "Λειπει ρυθμιση",
+              "Το δοκιμαστικο QR δεν εχει ολα τα απαραιτητα στοιχεια.",
+              "",
+              false
+            );
+            return;
+          }
+
+          if (!navigator.geolocation) {
+            setState(
+              "error",
+              "Δεν υποστηριζεται",
+              "Η συσκευη ή ο browser δεν δινει προσβαση στην τοποθεσια.",
+              "",
+              true
+            );
+            return;
+          }
+
+          setState(
+            "checking",
+            "Ελεγχος τοποθεσιας",
+            "Ο browser θα ζητησει αδεια τοποθεσιας.",
+            "",
+            false
+          );
+
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              var lat = position.coords.latitude;
+              var lng = position.coords.longitude;
+              var accuracy = position.coords.accuracy;
+              var distance = distanceMeters(centerLat, centerLng, lat, lng);
+              var detailText =
+                "Αποσταση: " + formatMeters(distance) +
+                " · Ακριβεια: ±" + formatMeters(accuracy) +
+                " · Οριο: " + formatMeters(radiusMeters);
+
+              if (distance <= radiusMeters) {
+                setState(
+                  "allowed",
+                  "Επιτρεπεται",
+                  "Σε μεταφερουμε στη σελιδα.",
+                  detailText,
+                  false
+                );
+                window.setTimeout(function () {
+                  window.location.replace(targetUrl);
+                }, redirectDelayMs);
+                return;
+              }
+
+              setState(
+                "denied",
+                "Εκτος περιοχης",
+                "Το QR λειτουργει μονο απο τον χωρο που εχει οριστει.",
+                detailText,
+                true
+              );
+            },
+            function (error) {
+              var reason = "Δεν μπορεσαμε να διαβασουμε την τοποθεσια.";
+
+              if (error.code === error.PERMISSION_DENIED) {
+                reason = "Δεν δοθηκε αδεια τοποθεσιας.";
+              } else if (error.code === error.POSITION_UNAVAILABLE) {
+                reason = "Η τοποθεσια δεν ειναι διαθεσιμη αυτη τη στιγμη.";
+              } else if (error.code === error.TIMEOUT) {
+                reason = "Ο ελεγχος τοποθεσιας αργησε πολυ.";
+              }
+
+              setState("error", "Δεν συνεχισε", reason, "", true);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 15000,
+              maximumAge: 0
+            }
+          );
+        }
+
+        retry.addEventListener("click", checkLocation);
+        checkLocation();
+      })();
+    </script>
+  </body>
+</html>
