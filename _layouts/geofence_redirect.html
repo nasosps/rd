@@ -7,11 +7,12 @@
     <style>
       :root {
         color-scheme: light dark;
-        --bg: #101820;
+        --bg: #12211f;
         --panel: #f7f5ef;
         --ink: #1d252d;
         --muted: #64707a;
         --accent: #0f8f78;
+        --accent-dark: #0b6d5d;
         --danger: #a73935;
         --line: rgba(29, 37, 45, 0.16);
       }
@@ -35,16 +36,17 @@
         width: min(100%, 460px);
         background: var(--panel);
         border-radius: 8px;
-        padding: 28px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
         box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
       }
 
       .badge {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         display: grid;
         place-items: center;
-        border-radius: 50%;
+        border-radius: 8px;
         background: var(--accent);
         color: white;
         font-weight: 800;
@@ -52,9 +54,17 @@
         margin-bottom: 18px;
       }
 
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--accent-dark);
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
       h1 {
         margin: 0 0 10px;
-        font-size: 24px;
+        font-size: 28px;
         line-height: 1.2;
         letter-spacing: 0;
       }
@@ -66,14 +76,31 @@
         line-height: 1.5;
       }
 
+      #message {
+        white-space: pre-line;
+      }
+
       .details {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: rgba(15, 143, 120, 0.08);
+        white-space: pre-line;
+        min-height: 20px;
+      }
+
+      .details:empty {
+        display: none;
+      }
+
+      .privacy {
         margin-top: 18px;
         padding-top: 16px;
         border-top: 1px solid var(--line);
         font-size: 13px;
         color: var(--muted);
         line-height: 1.5;
-        min-height: 20px;
       }
 
       button {
@@ -87,6 +114,12 @@
         font: inherit;
         font-weight: 700;
         cursor: pointer;
+        transition: background 160ms ease, transform 160ms ease;
+      }
+
+      button:hover {
+        background: var(--accent-dark);
+        transform: translateY(-1px);
       }
 
       button[hidden] {
@@ -104,6 +137,7 @@
           --ink: #edf3f7;
           --muted: #aeb9c2;
           --line: rgba(237, 243, 247, 0.16);
+          --accent-dark: #7ce0cc;
         }
       }
     </style>
@@ -116,11 +150,15 @@
     data-redirect-delay-ms="{{ page.redirect_delay_ms | default: 900 }}"
   >
     <main id="card">
-      <div class="badge" aria-hidden="true">QR</div>
+      <div class="badge" aria-hidden="true">rd</div>
+      <p class="eyebrow">QR location check</p>
       <h1 id="title">{{ page.heading | default: "Ελεγχος τοποθεσιας" }}</h1>
-      <p id="message">Ζηταμε αδεια για την τοποθεσια ωστε να συνεχισει το QR.</p>
+      <p id="message">Για να συνεχισει το QR, χρειαζεται μια συντομη επιβεβαιωση οτι βρισκεστε εντος καταστηματος.
+To continue, we need a quick location check to confirm you are at the venue.</p>
       <div class="details" id="details"></div>
-      <button id="retry" type="button" hidden>Δοκιμη ξανα</button>
+      <div class="privacy">Η τοποθεσια χρησιμοποιειται μονο για αυτον τον ελεγχο και δεν αποθηκευεται.
+Your location is used only for this check and is not stored.</div>
+      <button id="retry" type="button">Συνεχεια / Continue</button>
     </main>
 
     <script>
@@ -137,12 +175,15 @@
         var details = document.getElementById("details");
         var retry = document.getElementById("retry");
 
-        function setState(state, nextTitle, nextMessage, nextDetails, canRetry) {
+        function setState(state, nextTitle, nextMessage, nextDetails, canRetry, buttonLabel) {
           card.className = state;
           title.textContent = nextTitle;
           message.textContent = nextMessage;
           details.textContent = nextDetails || "";
           retry.hidden = !canRetry;
+          if (buttonLabel) {
+            retry.textContent = buttonLabel;
+          }
         }
 
         function toRad(value) {
@@ -173,8 +214,8 @@
           if (!targetUrl || !Number.isFinite(centerLat) || !Number.isFinite(centerLng)) {
             setState(
               "error",
-              "Λειπει ρυθμιση",
-              "Το δοκιμαστικο QR δεν εχει ολα τα απαραιτητα στοιχεια.",
+              "Λειπει ρυθμιση / Missing setup",
+              "Το δοκιμαστικο QR δεν εχει ολα τα απαραιτητα στοιχεια.\nThis test QR is missing required setup details.",
               "",
               false
             );
@@ -184,18 +225,19 @@
           if (!navigator.geolocation) {
             setState(
               "error",
-              "Δεν υποστηριζεται",
-              "Η συσκευη ή ο browser δεν δινει προσβαση στην τοποθεσια.",
+              "Δεν υποστηριζεται / Not supported",
+              "Η συσκευη ή ο browser δεν δινει προσβαση στην τοποθεσια.\nThis device or browser cannot share location.",
               "",
-              true
+              true,
+              "Δοκιμη ξανα / Try again"
             );
             return;
           }
 
           setState(
             "checking",
-            "Ελεγχος τοποθεσιας",
-            "Ο browser θα ζητησει αδεια τοποθεσιας.",
+            "Ελεγχος τοποθεσιας / Location check",
+            "Παρακαλουμε επιτρεψτε προσωρινα την τοποθεσια για να συνεχισει το QR.\nPlease allow location temporarily so the QR can continue.",
             "",
             false
           );
@@ -207,15 +249,15 @@
               var accuracy = position.coords.accuracy;
               var distance = distanceMeters(centerLat, centerLng, lat, lng);
               var detailText =
-                "Αποσταση: " + formatMeters(distance) +
-                " · Ακριβεια: ±" + formatMeters(accuracy) +
-                " · Οριο: " + formatMeters(radiusMeters);
+                "Αποσταση / Distance: " + formatMeters(distance) +
+                "\nΑκριβεια / Accuracy: ±" + formatMeters(accuracy) +
+                "\nΟριο / Limit: " + formatMeters(radiusMeters);
 
               if (distance <= radiusMeters) {
                 setState(
                   "allowed",
-                  "Επιτρεπεται",
-                  "Σε μεταφερουμε στη σελιδα.",
+                  "Επιτρεπεται / Access allowed",
+                  "Ευχαριστουμε. Σε μεταφερουμε στη σελιδα.\nThank you. Redirecting you now.",
                   detailText,
                   false
                 );
@@ -227,24 +269,25 @@
 
               setState(
                 "denied",
-                "Εκτος περιοχης",
-                "Το QR λειτουργει μονο απο τον χωρο που εχει οριστει.",
+                "Εκτος περιοχης / Outside area",
+                "Το QR λειτουργει μονο εντος του καταστηματος.\nThis QR works only inside the venue.",
                 detailText,
-                true
+                true,
+                "Δοκιμη ξανα / Try again"
               );
             },
             function (error) {
-              var reason = "Δεν μπορεσαμε να διαβασουμε την τοποθεσια.";
+              var reason = "Δεν μπορεσαμε να διαβασουμε την τοποθεσια.\nWe could not read your location.";
 
               if (error.code === error.PERMISSION_DENIED) {
-                reason = "Δεν δοθηκε αδεια τοποθεσιας.";
+                reason = "Δεν δοθηκε αδεια τοποθεσιας.\nLocation permission was not granted.";
               } else if (error.code === error.POSITION_UNAVAILABLE) {
-                reason = "Η τοποθεσια δεν ειναι διαθεσιμη αυτη τη στιγμη.";
+                reason = "Η τοποθεσια δεν ειναι διαθεσιμη αυτη τη στιγμη.\nLocation is not available right now.";
               } else if (error.code === error.TIMEOUT) {
-                reason = "Ο ελεγχος τοποθεσιας αργησε πολυ.";
+                reason = "Ο ελεγχος τοποθεσιας αργησε πολυ.\nThe location check took too long.";
               }
 
-              setState("error", "Δεν συνεχισε", reason, "", true);
+              setState("error", "Δεν συνεχισε / Could not continue", reason, "", true, "Δοκιμη ξανα / Try again");
             },
             {
               enableHighAccuracy: true,
@@ -255,7 +298,6 @@
         }
 
         retry.addEventListener("click", checkLocation);
-        checkLocation();
       })();
     </script>
   </body>
