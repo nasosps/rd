@@ -2,92 +2,119 @@
 <html lang="el">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>{{ page.title | default: "Location check" }}</title>
     <style>
       :root {
-        color-scheme: light dark;
-        --bg: #12211f;
-        --panel: #f7f5ef;
-        --ink: #1d252d;
-        --muted: #64707a;
-        --accent: #0f8f78;
-        --accent-dark: #0b6d5d;
-        --danger: #a73935;
-        --line: rgba(29, 37, 45, 0.16);
+        color-scheme: light;
+        --bg-top: #e8fbf4;
+        --bg-bottom: #fff2e8;
+        --panel: #fffdf8;
+        --ink: #18312d;
+        --muted: #5f726d;
+        --accent: #118a72;
+        --accent-strong: #0a6b59;
+        --accent-soft: #dff7ee;
+        --warm: #ff8f6b;
+        --danger: #b0443e;
+        --danger-soft: #fff0ec;
+        --line: rgba(24, 49, 45, 0.14);
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html,
+      body {
+        min-height: 100%;
+      }
+
       body {
         margin: 0;
-        min-height: 100vh;
+        min-height: 100svh;
         display: grid;
         place-items: center;
-        padding: 24px;
-        background: var(--bg);
+        padding: 18px;
+        background:
+          linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
         color: var(--ink);
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        text-align: center;
       }
 
       main {
-        width: min(100%, 460px);
+        width: min(100%, 430px);
+        min-height: min(680px, calc(100svh - 36px));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         background: var(--panel);
+        border: 1px solid rgba(255, 255, 255, 0.7);
         border-radius: 8px;
-        padding: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+        padding: 34px 24px;
+        box-shadow: 0 20px 60px rgba(25, 70, 61, 0.18);
       }
 
       .badge {
-        width: 48px;
-        height: 48px;
+        width: 72px;
+        height: 72px;
         display: grid;
         place-items: center;
         border-radius: 8px;
-        background: var(--accent);
-        color: white;
-        font-weight: 800;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        border: 2px solid rgba(17, 138, 114, 0.18);
+        font-size: 26px;
+        font-weight: 900;
         letter-spacing: 0;
-        margin-bottom: 18px;
+        margin: 0 auto 20px;
+        text-transform: lowercase;
       }
 
       .eyebrow {
-        margin: 0 0 8px;
-        color: var(--accent-dark);
-        font-size: 13px;
-        font-weight: 800;
+        margin: 0 0 12px;
+        color: var(--warm);
+        font-size: 14px;
+        line-height: 1.2;
+        font-weight: 900;
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
       h1 {
-        margin: 0 0 10px;
-        font-size: 28px;
-        line-height: 1.2;
+        margin: 0 0 18px;
+        color: var(--ink);
+        font-size: 34px;
+        line-height: 1.08;
         letter-spacing: 0;
+        font-weight: 900;
       }
 
       p {
         margin: 0;
         color: var(--muted);
-        font-size: 15px;
-        line-height: 1.5;
+        font-size: 18px;
+        line-height: 1.45;
       }
 
       #message {
+        max-width: 340px;
         white-space: pre-line;
       }
 
       .details {
-        margin-top: 18px;
-        padding: 14px 16px;
+        width: 100%;
+        margin-top: 22px;
+        padding: 16px;
         border: 1px solid var(--line);
-        border-radius: 6px;
-        background: rgba(15, 143, 120, 0.08);
+        border-radius: 8px;
+        background: rgba(223, 247, 238, 0.78);
+        color: var(--ink);
+        font-size: 16px;
+        line-height: 1.45;
         white-space: pre-line;
-        min-height: 20px;
       }
 
       .details:empty {
@@ -95,49 +122,80 @@
       }
 
       .privacy {
-        margin-top: 18px;
-        padding-top: 16px;
+        max-width: 340px;
+        margin-top: 22px;
+        padding-top: 18px;
         border-top: 1px solid var(--line);
-        font-size: 13px;
         color: var(--muted);
+        font-size: 15px;
         line-height: 1.5;
+        white-space: pre-line;
       }
 
       button {
         width: 100%;
-        margin-top: 22px;
+        min-height: 58px;
+        margin-top: 26px;
         border: 0;
-        border-radius: 6px;
-        padding: 13px 16px;
+        border-radius: 8px;
+        padding: 16px 18px;
         background: var(--accent);
         color: white;
         font: inherit;
-        font-weight: 700;
+        font-size: 18px;
+        font-weight: 900;
+        line-height: 1.2;
         cursor: pointer;
-        transition: background 160ms ease, transform 160ms ease;
+        box-shadow: 0 14px 30px rgba(17, 138, 114, 0.26);
+        transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
       }
 
-      button:hover {
-        background: var(--accent-dark);
+      button:hover,
+      button:focus-visible {
+        background: var(--accent-strong);
         transform: translateY(-1px);
+        box-shadow: 0 16px 34px rgba(17, 138, 114, 0.32);
       }
 
       button[hidden] {
         display: none;
       }
 
-      .denied .badge,
-      .error .badge {
-        background: var(--danger);
+      .allowed .badge {
+        background: var(--accent);
+        color: white;
       }
 
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --panel: #182430;
-          --ink: #edf3f7;
-          --muted: #aeb9c2;
-          --line: rgba(237, 243, 247, 0.16);
-          --accent-dark: #7ce0cc;
+      .checking .badge {
+        background: #fff1d7;
+        color: #9a5d00;
+        border-color: rgba(255, 143, 107, 0.24);
+      }
+
+      .denied .badge,
+      .error .badge {
+        background: var(--danger-soft);
+        color: var(--danger);
+        border-color: rgba(176, 68, 62, 0.18);
+      }
+
+      @media (max-width: 420px) {
+        body {
+          padding: 12px;
+        }
+
+        main {
+          width: 100%;
+          min-height: calc(100svh - 24px);
+          padding: 30px 20px;
+        }
+
+        h1 {
+          font-size: 32px;
+        }
+
+        p {
+          font-size: 17px;
         }
       }
     </style>
@@ -152,13 +210,13 @@
     <main id="card">
       <div class="badge" aria-hidden="true">rd</div>
       <p class="eyebrow">QR location check</p>
-      <h1 id="title">{{ page.heading | default: "Ελεγχος τοποθεσιας" }}</h1>
-      <p id="message">Για να συνεχισει το QR, χρειαζεται μια συντομη επιβεβαιωση οτι βρισκεστε εντος καταστηματος.
+      <h1 id="title">{{ page.heading | default: "rd" }}</h1>
+      <p id="message">&#915;&#953;&#945; &#957;&#945; &#963;&#965;&#957;&#949;&#967;&#953;&#963;&#949;&#953; &#964;&#959; QR, &#967;&#961;&#949;&#953;&#945;&#950;&#949;&#964;&#945;&#953; &#956;&#953;&#945; &#963;&#965;&#957;&#964;&#959;&#956;&#951; &#949;&#960;&#953;&#946;&#949;&#946;&#945;&#953;&#969;&#963;&#951; &#959;&#964;&#953; &#946;&#961;&#953;&#963;&#954;&#949;&#963;&#964;&#949; &#949;&#957;&#964;&#959;&#962; &#954;&#945;&#964;&#945;&#963;&#964;&#951;&#956;&#945;&#964;&#959;&#962;.
 To continue, we need a quick location check to confirm you are at the venue.</p>
       <div class="details" id="details"></div>
-      <div class="privacy">Η τοποθεσια χρησιμοποιειται μονο για αυτον τον ελεγχο και δεν αποθηκευεται.
+      <div class="privacy">&#919; &#964;&#959;&#960;&#959;&#952;&#949;&#963;&#953;&#945; &#967;&#961;&#951;&#963;&#953;&#956;&#959;&#960;&#959;&#953;&#949;&#953;&#964;&#945;&#953; &#956;&#959;&#957;&#959; &#947;&#953;&#945; &#945;&#965;&#964;&#959;&#957; &#964;&#959;&#957; &#949;&#955;&#949;&#947;&#967;&#959; &#954;&#945;&#953; &#948;&#949;&#957; &#945;&#960;&#959;&#952;&#951;&#954;&#949;&#965;&#949;&#964;&#945;&#953;.
 Your location is used only for this check and is not stored.</div>
-      <button id="retry" type="button">Συνεχεια / Continue</button>
+      <button id="retry" type="button">&#931;&#965;&#957;&#949;&#967;&#949;&#953;&#945; / Continue</button>
     </main>
 
     <script>
@@ -174,6 +232,25 @@ Your location is used only for this check and is not stored.</div>
         var message = document.getElementById("message");
         var details = document.getElementById("details");
         var retry = document.getElementById("retry");
+
+        var text = {
+          missingTitle: "\u039b\u03b5\u03b9\u03c0\u03b5\u03b9 \u03c1\u03c5\u03b8\u03bc\u03b9\u03c3\u03b7 / Missing setup",
+          missingMessage: "\u03a4\u03bf \u03b4\u03bf\u03ba\u03b9\u03bc\u03b1\u03c3\u03c4\u03b9\u03ba\u03bf QR \u03b4\u03b5\u03bd \u03b5\u03c7\u03b5\u03b9 \u03bf\u03bb\u03b1 \u03c4\u03b1 \u03b1\u03c0\u03b1\u03c1\u03b1\u03b9\u03c4\u03b7\u03c4\u03b1 \u03c3\u03c4\u03bf\u03b9\u03c7\u03b5\u03b9\u03b1.\nThis test QR is missing required setup details.",
+          unsupportedTitle: "\u0394\u03b5\u03bd \u03c5\u03c0\u03bf\u03c3\u03c4\u03b7\u03c1\u03b9\u03b6\u03b5\u03c4\u03b1\u03b9 / Not supported",
+          unsupportedMessage: "\u0397 \u03c3\u03c5\u03c3\u03ba\u03b5\u03c5\u03b7 \u03ae \u03bf browser \u03b4\u03b5\u03bd \u03b4\u03b9\u03bd\u03b5\u03b9 \u03c0\u03c1\u03bf\u03c3\u03b2\u03b1\u03c3\u03b7 \u03c3\u03c4\u03b7\u03bd \u03c4\u03bf\u03c0\u03bf\u03b8\u03b5\u03c3\u03b9\u03b1.\nThis device or browser cannot share location.",
+          checkingTitle: "\u0395\u03bb\u03b5\u03b3\u03c7\u03bf\u03c2 \u03c4\u03bf\u03c0\u03bf\u03b8\u03b5\u03c3\u03b9\u03b1\u03c2 / Location check",
+          checkingMessage: "\u03a0\u03b1\u03c1\u03b1\u03ba\u03b1\u03bb\u03bf\u03c5\u03bc\u03b5 \u03b5\u03c0\u03b9\u03c4\u03c1\u03b5\u03c8\u03c4\u03b5 \u03c0\u03c1\u03bf\u03c3\u03c9\u03c1\u03b9\u03bd\u03b1 \u03c4\u03b7\u03bd \u03c4\u03bf\u03c0\u03bf\u03b8\u03b5\u03c3\u03b9\u03b1 \u03b3\u03b9\u03b1 \u03bd\u03b1 \u03c3\u03c5\u03bd\u03b5\u03c7\u03b9\u03c3\u03b5\u03b9 \u03c4\u03bf QR.\nPlease allow location temporarily so the QR can continue.",
+          allowedTitle: "\u0395\u03c0\u03b9\u03c4\u03c1\u03b5\u03c0\u03b5\u03c4\u03b1\u03b9 / Access allowed",
+          allowedMessage: "\u0395\u03c5\u03c7\u03b1\u03c1\u03b9\u03c3\u03c4\u03bf\u03c5\u03bc\u03b5. \u03a3\u03b5 \u03bc\u03b5\u03c4\u03b1\u03c6\u03b5\u03c1\u03bf\u03c5\u03bc\u03b5 \u03c3\u03c4\u03b7 \u03c3\u03b5\u03bb\u03b9\u03b4\u03b1.\nThank you. Redirecting you now.",
+          deniedTitle: "\u0395\u03ba\u03c4\u03bf\u03c2 \u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03b7\u03c2 / Outside area",
+          deniedMessage: "\u03a4\u03bf QR \u03bb\u03b5\u03b9\u03c4\u03bf\u03c5\u03c1\u03b3\u03b5\u03b9 \u03bc\u03bf\u03bd\u03bf \u03b5\u03bd\u03c4\u03bf\u03c2 \u03c4\u03bf\u03c5 \u03ba\u03b1\u03c4\u03b1\u03c3\u03c4\u03b7\u03bc\u03b1\u03c4\u03bf\u03c2.\nThis QR works only inside the venue.",
+          genericError: "\u0394\u03b5\u03bd \u03bc\u03c0\u03bf\u03c1\u03b5\u03c3\u03b1\u03bc\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b2\u03b1\u03c3\u03bf\u03c5\u03bc\u03b5 \u03c4\u03b7\u03bd \u03c4\u03bf\u03c0\u03bf\u03b8\u03b5\u03c3\u03b9\u03b1.\nWe could not read your location.",
+          permissionDenied: "\u0394\u03b5\u03bd \u03b4\u03bf\u03b8\u03b7\u03ba\u03b5 \u03b1\u03b4\u03b5\u03b9\u03b1 \u03c4\u03bf\u03c0\u03bf\u03b8\u03b5\u03c3\u03b9\u03b1\u03c2.\nLocation permission was not granted.",
+          positionUnavailable: "\u0397 \u03c4\u03bf\u03c0\u03bf\u03b8\u03b5\u03c3\u03b9\u03b1 \u03b4\u03b5\u03bd \u03b5\u03b9\u03bd\u03b1\u03b9 \u03b4\u03b9\u03b1\u03b8\u03b5\u03c3\u03b9\u03bc\u03b7 \u03b1\u03c5\u03c4\u03b7 \u03c4\u03b7 \u03c3\u03c4\u03b9\u03b3\u03bc\u03b7.\nLocation is not available right now.",
+          timeout: "\u039f \u03b5\u03bb\u03b5\u03b3\u03c7\u03bf\u03c2 \u03c4\u03bf\u03c0\u03bf\u03b8\u03b5\u03c3\u03b9\u03b1\u03c2 \u03b1\u03c1\u03b3\u03b7\u03c3\u03b5 \u03c0\u03bf\u03bb\u03c5.\nThe location check took too long.",
+          errorTitle: "\u0394\u03b5\u03bd \u03c3\u03c5\u03bd\u03b5\u03c7\u03b9\u03c3\u03b5 / Could not continue",
+          tryAgain: "\u0394\u03bf\u03ba\u03b9\u03bc\u03b7 \u03be\u03b1\u03bd\u03b1 / Try again"
+        };
 
         function setState(state, nextTitle, nextMessage, nextDetails, canRetry, buttonLabel) {
           card.className = state;
@@ -212,35 +289,16 @@ Your location is used only for this check and is not stored.</div>
 
         function checkLocation() {
           if (!targetUrl || !Number.isFinite(centerLat) || !Number.isFinite(centerLng)) {
-            setState(
-              "error",
-              "Λειπει ρυθμιση / Missing setup",
-              "Το δοκιμαστικο QR δεν εχει ολα τα απαραιτητα στοιχεια.\nThis test QR is missing required setup details.",
-              "",
-              false
-            );
+            setState("error", text.missingTitle, text.missingMessage, "", false);
             return;
           }
 
           if (!navigator.geolocation) {
-            setState(
-              "error",
-              "Δεν υποστηριζεται / Not supported",
-              "Η συσκευη ή ο browser δεν δινει προσβαση στην τοποθεσια.\nThis device or browser cannot share location.",
-              "",
-              true,
-              "Δοκιμη ξανα / Try again"
-            );
+            setState("error", text.unsupportedTitle, text.unsupportedMessage, "", true, text.tryAgain);
             return;
           }
 
-          setState(
-            "checking",
-            "Ελεγχος τοποθεσιας / Location check",
-            "Παρακαλουμε επιτρεψτε προσωρινα την τοποθεσια για να συνεχισει το QR.\nPlease allow location temporarily so the QR can continue.",
-            "",
-            false
-          );
+          setState("checking", text.checkingTitle, text.checkingMessage, "", false);
 
           navigator.geolocation.getCurrentPosition(
             function (position) {
@@ -249,45 +307,32 @@ Your location is used only for this check and is not stored.</div>
               var accuracy = position.coords.accuracy;
               var distance = distanceMeters(centerLat, centerLng, lat, lng);
               var detailText =
-                "Αποσταση / Distance: " + formatMeters(distance) +
-                "\nΑκριβεια / Accuracy: ±" + formatMeters(accuracy) +
-                "\nΟριο / Limit: " + formatMeters(radiusMeters);
+                "\u0391\u03c0\u03bf\u03c3\u03c4\u03b1\u03c3\u03b7 / Distance: " + formatMeters(distance) +
+                "\n\u0391\u03ba\u03c1\u03b9\u03b2\u03b5\u03b9\u03b1 / Accuracy: +/-" + formatMeters(accuracy) +
+                "\n\u039f\u03c1\u03b9\u03bf / Limit: " + formatMeters(radiusMeters);
 
               if (distance <= radiusMeters) {
-                setState(
-                  "allowed",
-                  "Επιτρεπεται / Access allowed",
-                  "Ευχαριστουμε. Σε μεταφερουμε στη σελιδα.\nThank you. Redirecting you now.",
-                  detailText,
-                  false
-                );
+                setState("allowed", text.allowedTitle, text.allowedMessage, detailText, false);
                 window.setTimeout(function () {
                   window.location.replace(targetUrl);
                 }, redirectDelayMs);
                 return;
               }
 
-              setState(
-                "denied",
-                "Εκτος περιοχης / Outside area",
-                "Το QR λειτουργει μονο εντος του καταστηματος.\nThis QR works only inside the venue.",
-                detailText,
-                true,
-                "Δοκιμη ξανα / Try again"
-              );
+              setState("denied", text.deniedTitle, text.deniedMessage, detailText, true, text.tryAgain);
             },
             function (error) {
-              var reason = "Δεν μπορεσαμε να διαβασουμε την τοποθεσια.\nWe could not read your location.";
+              var reason = text.genericError;
 
               if (error.code === error.PERMISSION_DENIED) {
-                reason = "Δεν δοθηκε αδεια τοποθεσιας.\nLocation permission was not granted.";
+                reason = text.permissionDenied;
               } else if (error.code === error.POSITION_UNAVAILABLE) {
-                reason = "Η τοποθεσια δεν ειναι διαθεσιμη αυτη τη στιγμη.\nLocation is not available right now.";
+                reason = text.positionUnavailable;
               } else if (error.code === error.TIMEOUT) {
-                reason = "Ο ελεγχος τοποθεσιας αργησε πολυ.\nThe location check took too long.";
+                reason = text.timeout;
               }
 
-              setState("error", "Δεν συνεχισε / Could not continue", reason, "", true, "Δοκιμη ξανα / Try again");
+              setState("error", text.errorTitle, reason, "", true, text.tryAgain);
             },
             {
               enableHighAccuracy: true,
