@@ -28,9 +28,7 @@
         min-height: 100vh;
         font-family: Arial, "Helvetica Neue", sans-serif;
         color: var(--ink);
-        background:
-          linear-gradient(rgba(251, 246, 237, 0.9), rgba(251, 246, 237, 0.98)),
-          url("{{ page.photo }}") center / cover fixed;
+        background: linear-gradient(rgba(251, 246, 237, 0.9), rgba(251, 246, 237, 0.98));
       }
 
       .page {
@@ -88,7 +86,7 @@
       }
 
       .caption {
-        margin: -8px 0 4px;
+        margin: 0;
         color: var(--muted);
         font-size: 0.98rem;
         font-weight: 700;
@@ -121,19 +119,24 @@
         box-shadow: 0 16px 30px rgba(111, 63, 36, 0.28);
       }
 
-      .text-el,
-      .text-en {
-        display: block;
-      }
-
-      .text-en {
-        opacity: 1;
-        font-size: inherit;
-        font-weight: inherit;
-      }
-
       .order-button:active {
         transform: translateY(1px);
+      }
+
+      .language-stack,
+      .language-panel {
+        width: 100%;
+      }
+
+      .language-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .language-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
       }
 
       .visit-card {
@@ -206,35 +209,33 @@
       <section class="hero" aria-label="{{ page.cafe_name }}">
         <img class="logo" src="{{ page.logo }}" alt="{{ page.cafe_name }}" />
         <h1 class="cafe">{{ page.cafe_name }}</h1>
-        <p class="caption">
-          <span class="text-en">{{ page.caption_en }}</span>
-          <span class="text-el">{{ page.caption_el }}</span>
-        </p>
-        <a class="order-button" href="{{ page.target }}">
-          <span class="text-en">{{ page.order_label_en }}</span>
-          <span class="text-el">{{ page.order_label_el }}</span>
-        </a>
-        <img class="photo" src="{{ page.photo }}" alt="{{ page.photo_alt }}" />
-        <div class="visit-card">
-          <h2>
-            <span class="text-en">{{ page.visit_title_en }}</span>
-            <span class="text-el">{{ page.visit_title_el }}</span>
-          </h2>
-          <p>
-            <span class="text-en">{{ page.visit_text_en }}</span>
-            <span class="text-el">{{ page.visit_text_el }}</span>
-          </p>
-          <a class="directions-button" href="{{ page.visit_url }}">
-            <span class="text-en">{{ page.visit_label_en }}</span>
-            <span class="text-el">{{ page.visit_label_el }}</span>
-          </a>
-        </div>
-      </section>
 
-      <p class="footnote">
-        <span class="text-en">{{ page.powered_en }}</span>
-        <span class="text-el">{{ page.powered_el }}</span>
-      </p>
+        <div class="language-stack">
+          <div class="language-panel" lang="en">
+            <p class="caption">{{ page.caption_en }}</p>
+            <a class="order-button" href="{{ page.target }}">{{ page.order_label_en }}</a>
+            <div class="visit-card">
+              <h2>{{ page.visit_title_en }}</h2>
+              <p>{{ page.visit_text_en }}</p>
+              <a class="directions-button" href="{{ page.visit_url }}">{{ page.visit_label_en }}</a>
+            </div>
+            <p class="footnote">{{ page.powered_en }}</p>
+          </div>
+
+          <div class="language-panel" lang="el">
+            <p class="caption">{{ page.caption_el }}</p>
+            <a class="order-button" href="{{ page.target }}">{{ page.order_label_el }}</a>
+            <div class="visit-card">
+              <h2>{{ page.visit_title_el }}</h2>
+              <p>{{ page.visit_text_el }}</p>
+              <a class="directions-button" href="{{ page.visit_url }}">{{ page.visit_label_el }}</a>
+            </div>
+            <p class="footnote">{{ page.powered_el }}</p>
+          </div>
+        </div>
+
+        <img class="photo" src="{{ page.photo }}" alt="{{ page.photo_alt }}" />
+      </section>
     </main>
   </body>
 </html>
