@@ -127,9 +127,9 @@
       }
 
       .text-en {
-        opacity: 0.74;
-        font-size: 0.82em;
-        font-weight: 800;
+        opacity: 1;
+        font-size: inherit;
+        font-weight: inherit;
       }
 
       .order-button:active {
@@ -164,19 +164,19 @@
         <img class="logo" src="{{ page.logo }}" alt="{{ page.cafe_name }}" />
         <h1 class="cafe">{{ page.cafe_name }}</h1>
         <p class="caption">
-          <span class="text-el">{{ page.caption_el }}</span>
           <span class="text-en">{{ page.caption_en }}</span>
+          <span class="text-el">{{ page.caption_el }}</span>
         </p>
         <a class="order-button" href="{{ page.target }}">
-          <span class="text-el">{{ page.order_label_el }}</span>
           <span class="text-en">{{ page.order_label_en }}</span>
+          <span class="text-el">{{ page.order_label_el }}</span>
         </a>
         <img class="photo" src="{{ page.photo }}" alt="{{ page.photo_alt }}" />
       </section>
 
       <p class="footnote">
-        <span class="text-el">{{ page.powered_el }}</span>
         <span class="text-en">{{ page.powered_en }}</span>
+        <span class="text-el">{{ page.powered_el }}</span>
       </p>
     </main>
   </body>
