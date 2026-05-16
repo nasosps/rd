@@ -108,8 +108,10 @@
         width: 100%;
         min-height: 58px;
         display: inline-flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 2px;
         border-radius: 8px;
         background: linear-gradient(135deg, var(--coffee), var(--gold));
         color: #fff;
@@ -117,6 +119,17 @@
         font-weight: 900;
         text-decoration: none;
         box-shadow: 0 16px 30px rgba(111, 63, 36, 0.28);
+      }
+
+      .text-el,
+      .text-en {
+        display: block;
+      }
+
+      .text-en {
+        opacity: 0.74;
+        font-size: 0.82em;
+        font-weight: 800;
       }
 
       .order-button:active {
@@ -150,12 +163,21 @@
       <section class="hero" aria-label="{{ page.cafe_name }}">
         <img class="logo" src="{{ page.logo }}" alt="{{ page.cafe_name }}" />
         <h1 class="cafe">{{ page.cafe_name }}</h1>
-        <p class="caption">{{ page.caption }}</p>
+        <p class="caption">
+          <span class="text-el">{{ page.caption_el }}</span>
+          <span class="text-en">{{ page.caption_en }}</span>
+        </p>
+        <a class="order-button" href="{{ page.target }}">
+          <span class="text-el">{{ page.order_label_el }}</span>
+          <span class="text-en">{{ page.order_label_en }}</span>
+        </a>
         <img class="photo" src="{{ page.photo }}" alt="{{ page.photo_alt }}" />
-        <a class="order-button" href="{{ page.target }}">Παραγγείλτε εδώ</a>
       </section>
 
-      <p class="footnote">Powered by {{ page.cafe_name }}</p>
+      <p class="footnote">
+        <span class="text-el">{{ page.powered_el }}</span>
+        <span class="text-en">{{ page.powered_en }}</span>
+      </p>
     </main>
   </body>
 </html>
