@@ -28,7 +28,9 @@
         min-height: 100vh;
         font-family: Arial, "Helvetica Neue", sans-serif;
         color: var(--ink);
-        background: linear-gradient(rgba(251, 246, 237, 0.9), rgba(251, 246, 237, 0.98));
+        background:
+          linear-gradient(rgba(251, 246, 237, 0.9), rgba(251, 246, 237, 0.98)),
+          url("{{ page.photo }}") center / cover fixed;
       }
 
       .page {
@@ -219,7 +221,6 @@
               <p>{{ page.visit_text_en }}</p>
               <a class="directions-button" href="{{ page.visit_url }}">{{ page.visit_label_en }}</a>
             </div>
-            <p class="footnote">{{ page.powered_en }}</p>
           </div>
 
           <div class="language-panel" lang="el">
@@ -230,7 +231,6 @@
               <p>{{ page.visit_text_el }}</p>
               <a class="directions-button" href="{{ page.visit_url }}">{{ page.visit_label_el }}</a>
             </div>
-            <p class="footnote">{{ page.powered_el }}</p>
           </div>
         </div>
 
