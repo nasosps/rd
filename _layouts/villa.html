@@ -136,6 +136,49 @@
         transform: translateY(1px);
       }
 
+      .visit-card {
+        width: 100%;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 253, 248, 0.92);
+        box-shadow: 0 12px 28px rgba(70, 36, 16, 0.1);
+        text-align: center;
+      }
+
+      .visit-card h2 {
+        margin: 0 0 8px;
+        color: var(--coffee);
+        font-size: 1.1rem;
+        line-height: 1.25;
+      }
+
+      .visit-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.35;
+        font-weight: 700;
+      }
+
+      .directions-button {
+        width: 100%;
+        min-height: 52px;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        margin-top: 12px;
+        border: 1px solid rgba(111, 63, 36, 0.28);
+        border-radius: 8px;
+        background: rgba(255, 253, 248, 0.92);
+        color: var(--coffee);
+        font-size: 0.98rem;
+        font-weight: 900;
+        text-decoration: none;
+      }
+
       .footnote {
         margin: 12px 0 0;
         color: rgba(37, 29, 23, 0.58);
@@ -172,6 +215,20 @@
           <span class="text-el">{{ page.order_label_el }}</span>
         </a>
         <img class="photo" src="{{ page.photo }}" alt="{{ page.photo_alt }}" />
+        <div class="visit-card">
+          <h2>
+            <span class="text-en">{{ page.visit_title_en }}</span>
+            <span class="text-el">{{ page.visit_title_el }}</span>
+          </h2>
+          <p>
+            <span class="text-en">{{ page.visit_text_en }}</span>
+            <span class="text-el">{{ page.visit_text_el }}</span>
+          </p>
+          <a class="directions-button" href="{{ page.visit_url }}">
+            <span class="text-en">{{ page.visit_label_en }}</span>
+            <span class="text-el">{{ page.visit_label_el }}</span>
+          </a>
+        </div>
       </section>
 
       <p class="footnote">
