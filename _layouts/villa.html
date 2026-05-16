@@ -1,9 +1,25 @@
+{% assign villa_name = page.villa_name | default: "Villa" %}
+{% assign cafe_name = page.cafe_name | default: "Oscar Coffee & Food" %}
+{% assign logo = page.logo | default: "assets/oscar-logo.jpg" %}
+{% assign photo = page.photo | default: "assets/oscar-cafe-preview.jpg" %}
+{% assign photo_alt = page.photo_alt | default: "Coffee and croissant on a cafe table" %}
+{% assign caption_en = page.caption_en | default: "Coffee, food and drinks delivered to your villa or apartment" %}
+{% assign caption_el = page.caption_el | default: "Delivery καφέ, φαγητού και ποτού στο κατάλυμά σας" %}
+{% assign order_label_en = page.order_label_en | default: "Order here" %}
+{% assign order_label_el = page.order_label_el | default: "Παραγγείλτε εδώ" %}
+{% assign visit_title_en = page.visit_title_en | default: "Want to eat with us?" %}
+{% assign visit_title_el = page.visit_title_el | default: "Θέλετε να φάτε στο κατάστημα;" %}
+{% assign visit_text_en = page.visit_text_en | default: "Visit Oscar Coffee & Food in Kato Asites for coffee, food and drinks." %}
+{% assign visit_text_el = page.visit_text_el | default: "Σας περιμένουμε στο Oscar Coffee & Food στις Κάτω Ασίτες για καφέ, φαγητό και ποτό." %}
+{% assign visit_label_en = page.visit_label_en | default: "Get directions" %}
+{% assign visit_label_el = page.visit_label_el | default: "Οδηγίες για το κατάστημα" %}
+{% assign visit_url = page.visit_url | default: "https://www.google.com/maps/dir/?api=1&destination=%CE%9A%CE%AC%CF%84%CF%89+%CE%91%CF%83%CE%AF%CF%84%CE%B5%CF%82+700+13&destination_place_id=ChIJxQi7X_j9mhQRsRnJi_cXuRw&travelmode=driving" %}
 <!doctype html>
 <html lang="el">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ page.title }}</title>
+    <title>{{ page.title | default: villa_name }}</title>
     <style>
       :root {
         --cream: #fbf6ed;
@@ -30,7 +46,7 @@
         color: var(--ink);
         background:
           linear-gradient(rgba(251, 246, 237, 0.9), rgba(251, 246, 237, 0.98)),
-          url("{{ page.photo }}") center / cover fixed;
+          url("{{ photo }}") center / cover fixed;
       }
 
       .page {
@@ -206,35 +222,35 @@
   </head>
   <body>
     <main class="page">
-      <div class="villa-name">{{ page.villa_name }}</div>
+      <div class="villa-name">{{ villa_name }}</div>
 
-      <section class="hero" aria-label="{{ page.cafe_name }}">
-        <img class="logo" src="{{ page.logo }}" alt="{{ page.cafe_name }}" />
-        <h1 class="cafe">{{ page.cafe_name }}</h1>
+      <section class="hero" aria-label="{{ cafe_name }}">
+        <img class="logo" src="{{ logo }}" alt="{{ cafe_name }}" />
+        <h1 class="cafe">{{ cafe_name }}</h1>
 
         <div class="language-stack">
           <div class="language-panel" lang="en">
-            <p class="caption">{{ page.caption_en }}</p>
-            <a class="order-button" href="{{ page.target }}">{{ page.order_label_en }}</a>
+            <p class="caption">{{ caption_en }}</p>
+            <a class="order-button" href="{{ page.target }}">{{ order_label_en }}</a>
             <div class="visit-card">
-              <h2>{{ page.visit_title_en }}</h2>
-              <p>{{ page.visit_text_en }}</p>
-              <a class="directions-button" href="{{ page.visit_url }}">{{ page.visit_label_en }}</a>
+              <h2>{{ visit_title_en }}</h2>
+              <p>{{ visit_text_en }}</p>
+              <a class="directions-button" href="{{ visit_url }}">{{ visit_label_en }}</a>
             </div>
           </div>
 
           <div class="language-panel" lang="el">
-            <p class="caption">{{ page.caption_el }}</p>
-            <a class="order-button" href="{{ page.target }}">{{ page.order_label_el }}</a>
+            <p class="caption">{{ caption_el }}</p>
+            <a class="order-button" href="{{ page.target }}">{{ order_label_el }}</a>
             <div class="visit-card">
-              <h2>{{ page.visit_title_el }}</h2>
-              <p>{{ page.visit_text_el }}</p>
-              <a class="directions-button" href="{{ page.visit_url }}">{{ page.visit_label_el }}</a>
+              <h2>{{ visit_title_el }}</h2>
+              <p>{{ visit_text_el }}</p>
+              <a class="directions-button" href="{{ visit_url }}">{{ visit_label_el }}</a>
             </div>
           </div>
         </div>
 
-        <img class="photo" src="{{ page.photo }}" alt="{{ page.photo_alt }}" />
+        <img class="photo" src="{{ photo }}" alt="{{ photo_alt }}" />
       </section>
     </main>
   </body>
