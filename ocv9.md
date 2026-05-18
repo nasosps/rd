@@ -1,6 +1,7 @@
 ---
-layout: redirect
+layout: villa
 title: Villa Evmaria | Oscar Coffee & Food
-target: https://p3d.gr/rd/ocv9
+villa_name: Villa Evmaria
+target: https://webrest.gr/menu.php?villa=28&account=2
 permalink: /ocv9
 ---

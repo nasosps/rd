@@ -1,6 +1,7 @@
 ---
-layout: redirect
+layout: villa
 title: Villa Kastelas | Oscar Coffee & Food
-target: https://p3d.gr/rd/ocv5
+villa_name: Villa Kastelas
+target: https://webrest.gr/menu.php?villa=24&account=2
 permalink: /ocv5
 ---

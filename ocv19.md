@@ -1,6 +1,7 @@
 ---
-layout: redirect
+layout: villa
 title: Villa Asmani 2 | Oscar Coffee & Food
-target: https://p3d.gr/rd/ocv19
+villa_name: Villa Asmani 2
+target: https://webrest.gr/menu.php?villa=40&account=2
 permalink: /ocv19
 ---

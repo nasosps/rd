@@ -1,8 +1,15 @@
 {% assign villa_name = page.villa_name | default: "Villa" %}
 {% assign cafe_name = page.cafe_name | default: "Oscar Coffee & Food" %}
 {% assign logo = page.logo | default: "assets/oscar-logo.jpg" %}
-{% assign photo = page.photo | default: "assets/oscar-cafe-preview.jpg" %}
-{% assign photo_alt = page.photo_alt | default: "Coffee and croissant on a cafe table" %}
+{% assign background_photo = page.background_photo | default: "assets/oscar1.jpg" %}
+{% assign gallery_photo_1 = page.gallery_photo_1 | default: "assets/oscar1.jpg" %}
+{% assign gallery_photo_1_alt = page.gallery_photo_1_alt | default: "Oscar villa photo 1" %}
+{% assign gallery_photo_2 = page.gallery_photo_2 | default: "assets/oscar2.jpg" %}
+{% assign gallery_photo_2_alt = page.gallery_photo_2_alt | default: "Oscar villa photo 2" %}
+{% assign gallery_photo_3 = page.gallery_photo_3 | default: "assets/oscar3.jpg" %}
+{% assign gallery_photo_3_alt = page.gallery_photo_3_alt | default: "Oscar villa photo 3" %}
+{% assign gallery_photo_4 = page.gallery_photo_4 | default: "assets/oscar4.jpg" %}
+{% assign gallery_photo_4_alt = page.gallery_photo_4_alt | default: "Oscar villa photo 4" %}
 {% assign caption_en = page.caption_en | default: "Coffee, food and drinks delivered to your villa or apartment" %}
 {% assign caption_el = page.caption_el | default: "Delivery καφέ, φαγητού και ποτού στο κατάλυμά σας" %}
 {% assign order_label_en = page.order_label_en | default: "Order here" %}
@@ -46,7 +53,7 @@
         color: var(--ink);
         background:
           linear-gradient(rgba(251, 246, 237, 0.9), rgba(251, 246, 237, 0.98)),
-          url("{{ photo }}") center / cover fixed;
+          url("{{ background_photo }}") center / cover fixed;
       }
 
       .page {
@@ -111,7 +118,21 @@
         text-align: center;
       }
 
-      .photo {
+      .gallery {
+        width: 100%;
+        display: grid;
+        gap: 12px;
+      }
+
+      .gallery-title {
+        margin: 2px 0 0;
+        color: var(--coffee);
+        font-size: 1rem;
+        font-weight: 900;
+        text-align: center;
+      }
+
+      .gallery-photo {
         width: 100%;
         aspect-ratio: 4 / 5;
         border: 1px solid var(--line);
@@ -214,7 +235,15 @@
           padding-top: 26px;
         }
 
-        .photo {
+        .gallery {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .gallery-title {
+          grid-column: 1 / -1;
+        }
+
+        .gallery-photo {
           aspect-ratio: 16 / 10;
         }
       }
@@ -250,7 +279,13 @@
           </div>
         </div>
 
-        <img class="photo" src="{{ photo }}" alt="{{ photo_alt }}" />
+        <div class="gallery" aria-label="Oscar gallery">
+          <p class="gallery-title">Oscar Coffee &amp; Food</p>
+          <img class="gallery-photo" src="{{ gallery_photo_1 }}" alt="{{ gallery_photo_1_alt }}" />
+          <img class="gallery-photo" src="{{ gallery_photo_2 }}" alt="{{ gallery_photo_2_alt }}" />
+          <img class="gallery-photo" src="{{ gallery_photo_3 }}" alt="{{ gallery_photo_3_alt }}" />
+          <img class="gallery-photo" src="{{ gallery_photo_4 }}" alt="{{ gallery_photo_4_alt }}" />
+        </div>
       </section>
     </main>
   </body>

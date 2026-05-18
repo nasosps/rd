@@ -1,6 +1,7 @@
 ---
-layout: redirect
+layout: villa
 title: AORA Apartment 8 | Oscar Coffee & Food
-target: https://p3d.gr/rd/ocv17
+villa_name: AORA Apartment 8
+target: https://webrest.gr/menu.php?villa=37&account=2
 permalink: /ocv17
 ---
