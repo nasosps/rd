@@ -121,7 +121,7 @@
       .gallery {
         width: 100%;
         display: grid;
-        gap: 12px;
+        gap: 14px;
       }
 
       .gallery-title {
@@ -132,13 +132,73 @@
         text-align: center;
       }
 
-      .gallery-photo {
+      .gallery-button {
         width: 100%;
-        aspect-ratio: 4 / 5;
+        padding: 0;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        cursor: zoom-in;
+      }
+
+      .gallery-photo {
+        display: block;
+        width: 100%;
+        height: auto;
         border: 1px solid var(--line);
         border-radius: 8px;
         object-fit: cover;
         box-shadow: 0 18px 42px rgba(70, 36, 16, 0.2);
+      }
+
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        background: rgba(24, 16, 10, 0.82);
+        cursor: zoom-out;
+      }
+
+      .lightbox[hidden] {
+        display: none;
+      }
+
+      .lightbox-frame {
+        position: relative;
+        width: min(100%, 980px);
+        max-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lightbox-image {
+        display: block;
+        max-width: 100%;
+        max-height: calc(100vh - 36px);
+        border-radius: 8px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.94);
+        color: var(--coffee);
+        font-size: 1.6rem;
+        line-height: 1;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
       }
 
       .order-button {
@@ -234,18 +294,6 @@
           width: min(100%, 540px);
           padding-top: 26px;
         }
-
-        .gallery {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .gallery-title {
-          grid-column: 1 / -1;
-        }
-
-        .gallery-photo {
-          aspect-ratio: 16 / 10;
-        }
       }
     </style>
   </head>
@@ -281,12 +329,57 @@
 
         <div class="gallery" aria-label="Oscar gallery">
           <p class="gallery-title">Oscar Coffee &amp; Food</p>
-          <img class="gallery-photo" src="{{ gallery_photo_1 }}" alt="{{ gallery_photo_1_alt }}" />
-          <img class="gallery-photo" src="{{ gallery_photo_2 }}" alt="{{ gallery_photo_2_alt }}" />
-          <img class="gallery-photo" src="{{ gallery_photo_3 }}" alt="{{ gallery_photo_3_alt }}" />
-          <img class="gallery-photo" src="{{ gallery_photo_4 }}" alt="{{ gallery_photo_4_alt }}" />
+          <button class="gallery-button" type="button" data-lightbox-src="{{ gallery_photo_1 }}" data-lightbox-alt="{{ gallery_photo_1_alt }}"><img class="gallery-photo" src="{{ gallery_photo_1 }}" alt="{{ gallery_photo_1_alt }}" /></button>
+          <button class="gallery-button" type="button" data-lightbox-src="{{ gallery_photo_2 }}" data-lightbox-alt="{{ gallery_photo_2_alt }}"><img class="gallery-photo" src="{{ gallery_photo_2 }}" alt="{{ gallery_photo_2_alt }}" /></button>
+          <button class="gallery-button" type="button" data-lightbox-src="{{ gallery_photo_3 }}" data-lightbox-alt="{{ gallery_photo_3_alt }}"><img class="gallery-photo" src="{{ gallery_photo_3 }}" alt="{{ gallery_photo_3_alt }}" /></button>
+          <button class="gallery-button" type="button" data-lightbox-src="{{ gallery_photo_4 }}" data-lightbox-alt="{{ gallery_photo_4_alt }}"><img class="gallery-photo" src="{{ gallery_photo_4 }}" alt="{{ gallery_photo_4_alt }}" /></button>
         </div>
       </section>
     </main>
+    <div class="lightbox" data-lightbox hidden>
+      <div class="lightbox-frame">
+        <button class="lightbox-close" type="button" aria-label="Close gallery view">&times;</button>
+        <img class="lightbox-image" src="" alt="" />
+      </div>
+    </div>
+    <script>
+      (() => {
+        const lightbox = document.querySelector("[data-lightbox]");
+        if (!lightbox) {
+          return;
+        }
+        const lightboxImage = lightbox.querySelector(".lightbox-image");
+        const closeButton = lightbox.querySelector(".lightbox-close");
+        const body = document.body;
+
+        const closeLightbox = () => {
+          lightbox.hidden = true;
+          lightboxImage.src = "";
+          lightboxImage.alt = "";
+          body.style.overflow = "";
+        };
+
+        document.querySelectorAll("[data-lightbox-src]").forEach((button) => {
+          button.addEventListener("click", () => {
+            lightboxImage.src = button.getAttribute("data-lightbox-src") || "";
+            lightboxImage.alt = button.getAttribute("data-lightbox-alt") || "";
+            lightbox.hidden = false;
+            body.style.overflow = "hidden";
+          });
+        });
+
+        lightbox.addEventListener("click", (event) => {
+          if (event.target === lightbox || event.target === closeButton) {
+            closeLightbox();
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !lightbox.hidden) {
+            closeLightbox();
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
