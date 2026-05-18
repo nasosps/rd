@@ -1,5 +1,6 @@
 ---
 layout: redirect
-target: https://www.kalamakimeatbar.gr/knosou-giofyro/
+title: kkn
+target: https://p3d.gr/rd/kkn
 permalink: /kkn
 ---

@@ -1,5 +1,6 @@
 ---
 layout: redirect
-target: https://webrest.gr/qr_login.php?account=3
+title: cpd
+target: https://p3d.gr/rd/cpd
 permalink: /cpd
 ---

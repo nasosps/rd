@@ -1,5 +1,6 @@
 ---
 layout: redirect
-target: https://www.webrest.gr/menu.php?table=140&account=2
+title: oc3
+target: https://p3d.gr/rd/oc3
 permalink: /oc3
 ---
